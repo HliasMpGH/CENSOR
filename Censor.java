@@ -21,27 +21,27 @@ public class Censor {
             System.out.println("Connection to SQLite has been established.");
 
 
-
-            System.out.print("enter some words: ");
-            String words = input.nextLine();
-
-            String insQuery = "insert into messages(text, time) " +
-                              "values (?, datetime('now', 'localtime'))" ;
-            PreparedStatement stmt = conn.prepareStatement(insQuery);
-            stmt.setString(1, words);
-            stmt.executeUpdate();   
-            
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("select * from messages");
-
-            System.out.println("ID \t TEXT \t TIME");
-            while (rs.next()) {
-
-                System.out.print(rs.getString("id") + "\t");
-                System.out.print(rs.getString("text") + "\t");
-                System.out.println(rs.getString("time"));
+            while (true) {
+                System.out.print("enter some words: ");
+                String words = input.nextLine();
+    
+                String insQuery = "insert into messages(text, time) " +
+                                  "values (?, datetime('now', 'localtime'))" ;
+                PreparedStatement stmt = conn.prepareStatement(insQuery);
+                stmt.setString(1, words);
+                stmt.executeUpdate();   
+                
+                Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery("select * from messages");
+    
+                System.out.println("ID \t TEXT \t TIME");
+                while (rs.next()) {
+    
+                    System.out.print(rs.getString("id") + "\t");
+                    System.out.print(rs.getString("text") + "\t");
+                    System.out.println(rs.getString("time"));
+                }
             }
-
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
