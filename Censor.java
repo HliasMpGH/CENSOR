@@ -16,6 +16,12 @@ import java.net.URL;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+// files
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.util.stream.*;
+
+
 import java.util.Scanner;
 
 public class Censor {
@@ -25,11 +31,11 @@ public class Censor {
     static Scanner input = new Scanner(System.in);
     public static void main(String[] args) {
 
-        try {
+       // try {
 
-            connect();
-
-
+        //    connect();
+            openFile();
+            /* 
             String bad = httpReq();
 
             Pattern p = Pattern.compile("wtf");
@@ -44,7 +50,7 @@ public class Censor {
                 sb.append("*");
             }
             System.out.println(m.replaceAll(sb.toString()));
-             
+            
             while (true) {
                 System.out.print("enter some words: ");
                 String words = input.nextLine();
@@ -68,11 +74,14 @@ public class Censor {
             }
             
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                
+            }
+         */
+        
     }
 
     // used to establish the connection to the DB
@@ -88,6 +97,35 @@ public class Censor {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public static void openFile() {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter some words: ");
+        String words = input.nextLine();
+
+        Pattern reg = Pattern.compile(words);
+
+        try (BufferedReader in = new BufferedReader(new FileReader("C:/Users/ilias/Desktop/list2.txt"))) {
+            in.lines()
+                    .map(x -> reg.matcher(x))
+                    .filter(x -> x.find())
+                    .map(x -> x.end() - x.start())
+                    .map(Censor::stars)
+                    .forEach(System.out::println);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        input.close();
+    }
+
+    // used to calculate the number of '*' each word would need
+    public static String stars(int x) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < x; i++) {
+            sb.append("*");
+        }
+        return sb.toString();
     }
 
     public static String httpReq() {
